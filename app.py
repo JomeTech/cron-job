@@ -28,15 +28,15 @@ def hit_websites():
         except Exception as e:
             logging.error(f"An error occurred for {url}: {e}")
 
-# Schedule the function to run every 2 minutes
-schedule.every(2).minutes.do(hit_websites)
+# Schedule the function to run every 5 minutes
+schedule.every(5).minutes.do(hit_websites)
 
 # Background scheduler
 def run_scheduler():
     while True:
         logging.info("Scheduler is running...")
         schedule.run_pending()
-        time.sleep(10)
+        time.sleep(100)
 
 # Flask route
 @app.route("/")
