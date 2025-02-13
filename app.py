@@ -1,10 +1,9 @@
 import requests
 import time
 import schedule
-import logging
+from flask import Flask
 
-# Configure logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+app = Flask(__name__)
 
 # List of websites to hit
 urls = [
@@ -19,20 +18,31 @@ urls = [
 def hit_websites():
     for url in urls:
         try:
-            # Send the HTTP GET request with a timeout
             response = requests.get(url, timeout=10)
-            logging.info(f"Request to {url} completed with status code: {response.status_code}")
-        except requests.exceptions.Timeout:
-            logging.error(f"Request to {url} timed out.")
-        except requests.exceptions.RequestException as e:
-            logging.error(f"An error occurred for {url}: {e}")
+            print(f"Request to {url} completed with status code: {response.status_code}")
+        except Exception as e:
+            print(f"An error occurred for {url}: {e}")
 
 # Schedule the function to run every 2 minutes
 schedule.every(2).minutes.do(hit_websites)
 
-logging.info("Script started. Hitting the websites every 2 minutes...")
+# Background scheduler
+def run_scheduler():
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
-# Run the scheduler
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+# Flask route
+@app.route("/")
+def home():
+    return "Website monitor is running!"
+
+if __name__ == "__main__":
+    from threading import Thread
+    # Run the scheduler in a separate thread
+    scheduler_thread = Thread(target=run_scheduler, daemon=True)
+    scheduler_thread.start()
+
+    # Run Flask app
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
