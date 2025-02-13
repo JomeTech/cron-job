@@ -36,7 +36,7 @@ def run_scheduler():
     while True:
         logging.info("Scheduler is running...")
         schedule.run_pending()
-        time.sleep(1)
+        time.sleep(10)
 
 # Flask route
 @app.route("/")
