@@ -1,0 +1,38 @@
+name: Website Monitor
+
+# Define the workflow to run on a schedule
+on:
+  schedule:
+    - cron: "*/5 * * * *"  # Run every 2 minutes
+
+jobs:
+  website-monitor:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Set up Python
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.x"
+
+    # Step 2: Check out the repository
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    # Step 3: Install dependencies
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests schedule
+
+    # Step 4: Hit websites
+    - name: Hit websites
+      env:
+        URLS: "https://greenyield.onrender.com,https://greenguardian.onrender.com,https://likeme-backend-fxrs.onrender.com/api/portfolio/count,https://snapurls.onrender.com,https://snappedurl.onrender.com/temp"
+      run: |
+        echo "Starting website monitoring..."
+        for url in $(echo $URLS | tr "," "\n"); do
+          status=$(curl -o /dev/null -s -w "%{http_code}" $url);
+          echo "Request to $url completed with status code: $status";
+        done
