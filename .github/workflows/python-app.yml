@@ -3,7 +3,7 @@ name: Website Monitor
 # Define the workflow to run on a schedule
 on:
   schedule:
-    - cron: "*/5 * * * *"  # Run every 5 minutes (update interval to match GitHub's constraints)
+    - cron: "*/12 * * * *"  # Run every 5 minutes (update interval to match GitHub's constraints)
 
 jobs:
   website-monitor:
