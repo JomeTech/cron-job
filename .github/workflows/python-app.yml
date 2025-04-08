@@ -17,7 +17,7 @@ jobs:
     # Step 2: Hit websites
     - name: Hit websites
       env:
-        URLS: "https://snappedurl.onrender.com/temp"
+        URLS: "https://greenyield.onrender.com"
       run: |
         echo "Starting website monitoring..."
         for url in $(echo $URLS | tr "," "\n"); do
